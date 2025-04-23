@@ -33,7 +33,15 @@ class SampleInteractor(
      * Если число не делится на 3,5,15 - эмитим само число
      */
     fun task2(): Flow<String> {
-        return flowOf()
+        return sampleRepository.produceNumbers()
+            .flatMapConcat { num ->
+                when {
+                    num % 15 == 0 -> flowOf("$num", "FizzBuzz")
+                    num % 3 == 0 -> flowOf("$num", "Fizz")
+                    num % 5 == 0 -> flowOf("$num", "Buzz")
+                    else -> flowOf("$num")
+                }
+            }
     }
 
     /**
