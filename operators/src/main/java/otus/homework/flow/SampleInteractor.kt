@@ -18,11 +18,8 @@ class SampleInteractor(
      * 6) возвращает результат
      */
     fun task1(): Flow<String> {
-        return sampleRepository.produceNumbers()
-            .map { it * 5 }
-            .filterNot { it <= 20 || it % 2 == 0 }
-            .map { "$it won" }
-            .take(3)
+        return sampleRepository.produceNumbers().map { it * 5 }
+            .filterNot { it <= 20 || it % 2 == 0 }.map { "$it won" }.take(3)
     }
 
     /**
@@ -33,15 +30,14 @@ class SampleInteractor(
      * Если число не делится на 3,5,15 - эмитим само число
      */
     fun task2(): Flow<String> {
-        return sampleRepository.produceNumbers()
-            .flatMapConcat { num ->
-                when {
-                    num % 15 == 0 -> flowOf("$num", "FizzBuzz")
-                    num % 3 == 0 -> flowOf("$num", "Fizz")
-                    num % 5 == 0 -> flowOf("$num", "Buzz")
-                    else -> flowOf("$num")
-                }
+        return sampleRepository.produceNumbers().flatMapConcat { num ->
+            when {
+                num % 15 == 0 -> flowOf("$num", "FizzBuzz")
+                num % 3 == 0 -> flowOf("$num", "Fizz")
+                num % 5 == 0 -> flowOf("$num", "Buzz")
+                else -> flowOf("$num")
             }
+        }
     }
 
     /**
@@ -50,7 +46,9 @@ class SampleInteractor(
      * Если айтемы в одно из флоу кончились то результирующий флоу также должен закончится
      */
     fun task3(): Flow<Pair<String, String>> {
-        return flowOf()
+        return sampleRepository.produceColors().zip(sampleRepository.produceForms()) { color, form ->
+            color to form
+        }
     }
 
     /**
